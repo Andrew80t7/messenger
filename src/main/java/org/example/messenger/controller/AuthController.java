@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 
 @RestController
 public class AuthController {
+
     @Autowired
     private UserService userService;
 
@@ -20,4 +21,5 @@ public class AuthController {
         User user = userService.registerUser(userDto.getUsername(), userDto.getPassword());
         return ResponseEntity.ok(user);
     }
+
 }
