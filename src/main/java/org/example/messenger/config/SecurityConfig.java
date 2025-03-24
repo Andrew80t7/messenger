@@ -17,10 +17,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/register", "/users").permitAll() // Доступ к методам без авторизации
+                .requestMatchers("/register", "/users", "/chats/user/**", "/chats/create", "/messages/send").permitAll() // Доступ к методам без авторизации
                 .anyRequest().authenticated()
             )
-            .csrf(AbstractHttpConfigurer::disable); //// Отключение CSRF (для тестов)
+            .csrf(AbstractHttpConfigurer::disable); // Отключение CSRF (для тестов)
         return http.build();
     }
 

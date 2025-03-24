@@ -5,7 +5,8 @@ import org.example.messenger.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.example.messenger.config.SecurityConfig;
+
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -23,5 +24,10 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(password));
 
         return userRepository.save(user);
+    }
+
+    public Optional<User> findById(Long userId) {
+        return Optional.ofNullable(userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден")));
     }
 }
