@@ -16,6 +16,8 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+
+    //Регистрация пользователя
     @PostMapping("/register")
     public ResponseEntity<User> register(@Valid @RequestBody UserDto userDto) {
         User user = userService.registerUser(userDto.getUsername(), userDto.getPassword());

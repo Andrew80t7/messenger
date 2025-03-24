@@ -22,7 +22,7 @@ public class ChatController {
     @Autowired
     private UserService userService;
 
-
+    //Получение чатов пользователя
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Chat>> getUserChats(@PathVariable Long userId) {
         Optional<User> optionalUser = userService.findById(userId);
@@ -36,6 +36,7 @@ public class ChatController {
     }
 
 
+    //Создание чата
     @PostMapping("/create")
     public ResponseEntity<Chat> createChat(@RequestBody Chat chat) {
         Chat createdChat = chatService.createChat(chat);

@@ -25,6 +25,8 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
+
+    //Отправка сообщения
     @PostMapping("/send")
     public Message sendMessage(@RequestParam Long senderId, @RequestParam Long chatId, @RequestParam String text) {
         Optional<User> sender = userService.findById(senderId);
@@ -32,6 +34,8 @@ public class MessageController {
         return messageService.sendMessage(sender, chat, text);
     }
 
+
+     //Получение сообщений чата
     @GetMapping("/chat/{chatId}")
     public List<Message> getChatMessages(@PathVariable Long chatId) {
         Chat chat = chatService.findById(chatId);
