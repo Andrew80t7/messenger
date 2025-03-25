@@ -1,8 +1,9 @@
 package org.example.messenger.model;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
+import lombok.Setter;
 
+@Setter
 public class UserDto {
 
     @NotBlank(message = "Имя должно быть не пустое")
@@ -25,14 +26,6 @@ public class UserDto {
 
     public @NotBlank(message = "Пароль не должен быть пустым") String getPassword() {
         return password;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
 }
