@@ -25,14 +25,10 @@ public class ChatController {
     //Получение чатов пользователя
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Chat>> getUserChats(@PathVariable Long userId) {
-        Optional<User> optionalUser = userService.findById(userId);
-        if (optionalUser.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        // Извлекаем объект User из Optional
-        User user = optionalUser.get();
-        List<Chat> chats = chatService.getUserChats(user);
-        return ResponseEntity.ok(chats);
+        return userService.findById(userId)
+                .map(user -> ResponseEntity.ok(chatService.getUserChats(user)))
+                .orElse(ResponseEntity.notFound().build());
+
     }
 
 

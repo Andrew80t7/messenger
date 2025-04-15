@@ -7,6 +7,8 @@ import org.example.messenger.service.ChatService;
 import org.example.messenger.service.MessageService;
 import org.example.messenger.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,17 +27,24 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
-    //Отправка сообщения
-    @PostMapping("/send")
-    public Message sendMessage(@RequestParam Long senderId, @RequestParam Long chatId, @RequestParam String text) {
-        Optional<User> sender = userService.findById(senderId);
-        Chat chat = chatService.findById(chatId);
-        return messageService.sendMessage(sender, chat, text);
+    // Отправка сообщения через WebSocket
+    @MessageMapping("/send")
+    public void sendMessage(@RequestParam Long senderId, @RequestParam Long chatId, @RequestParam String text) {
+        Optional<User> senderOpt = userService.findById(senderId);
+        if (senderOpt.isPresent()) {
+            User sender = senderOpt.get();
+            Chat chat = chatService.findById(chatId);
+            Message message = messageService.sendMessage(Optional.of(sender), chat, text);
+
+            // Отправляем сообщение всем подписчикам чата
+            messagingTemplate.convertAndSend("/topic/chat/" + chatId, message);
+        }
     }
 
-
-     //Получение сообщений чата
+    // Получение сообщений чата (остаётся без изменений)
     @GetMapping("/chat/{chatId}")
     public List<Message> getChatMessages(@PathVariable Long chatId) {
         Chat chat = chatService.findById(chatId);

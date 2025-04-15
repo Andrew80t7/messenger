@@ -1,5 +1,6 @@
 package org.example.messenger.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -28,6 +29,7 @@ public class Chat {
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
 
     @JsonManagedReference
+    @JsonIgnore
     private List<Message> messages = new ArrayList<>();
 
     public Chat() {}
