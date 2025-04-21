@@ -1,21 +1,23 @@
 package org.example.messenger.model;
 
 import lombok.Getter;
-import lombok.Setter;
 
-@Setter
 @Getter
 public class ChatMessageDto {
+    // Геттеры и Сеттеры
     private Long senderId;
     private Long chatId;
     private String text;
 
-    public ChatMessageDto() {}
-
-    public ChatMessageDto(Long senderId, Long chatId, String text) {
+    public void setSenderId(Long senderId) {
         this.senderId = senderId;
-        this.chatId = chatId;
-        this.text = text;
     }
 
+    public void setChatId(Long chatId) {
+        this.chatId = chatId;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 }

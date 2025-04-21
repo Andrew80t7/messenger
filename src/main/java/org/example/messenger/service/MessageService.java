@@ -30,7 +30,7 @@ public class MessageService {
 
         // Повторно загружаем Chat с участниками, используя JOIN FETCH
         Chat persistentChat = chatRepository.findByIdWithParticipants(chat.getId()).
-                orElseThrow(()-> new IllegalArgumentException("Чат не найден"));
+                orElseThrow(() -> new IllegalArgumentException("Чат не найден"));
 
         // Теперь можно обращаться к persistentChat.getParticipants() без LazyInitializationException.
         if (!persistentChat.getParticipants().contains(sender)) {
