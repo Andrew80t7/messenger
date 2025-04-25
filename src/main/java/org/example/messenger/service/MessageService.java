@@ -28,7 +28,7 @@ public class MessageService {
         User sender = senderOptional.orElseThrow(() ->
                 new IllegalArgumentException("Отправитель не найден"));
 
-        // Повторно загружаем Chat с участниками, используя JOIN FETCH
+        // Повторно загружаем Chat с участниками
         Chat persistentChat = chatRepository.findByIdWithParticipants(chat.getId()).
                 orElseThrow(() -> new IllegalArgumentException("Чат не найден"));
 

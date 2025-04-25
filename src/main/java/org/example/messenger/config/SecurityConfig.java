@@ -55,7 +55,9 @@ public class SecurityConfig {
                                 "/users",
                                 "/chats/user/**",
                                 "/chats/create",
-                                "/messages/send"
+                                "/messages/send",
+                                "/chat/**",
+                                "/messages/chat/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

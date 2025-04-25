@@ -4,7 +4,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotNull;
 import org.example.messenger.service.UserService;
+import org.hibernate.persister.collection.mutation.UpdateRowsCoordinator;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +26,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public JwtAuthenticationFilter(JwtUtil jwtUtil, UserService userService) {
         this.jwtUtil = jwtUtil;
         this.userService = userService;
+    }
+
+    @Override
+    protected boolean shouldNotFilter(@NotNull HttpServletRequest request) throws ServletException{
+        String path = request.getRequestURI();
+        return path.startsWith("/ws")
+                || path.startsWith("/register")
+                || path.startsWith("/login")
+                || path.startsWith("/users")
+                || path.startsWith("/chats/")
+                || path.startsWith("/messages/send")
+                || path.startsWith("messages/chat/")
+                || path.startsWith("/chat/");
     }
 
     @Override

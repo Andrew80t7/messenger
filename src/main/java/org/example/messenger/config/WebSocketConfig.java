@@ -15,20 +15,20 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         config.enableSimpleBroker("/topic");
         config.setApplicationDestinationPrefixes("/app");
 
-        // Дополнительные настройки (опционально)
         config.setUserDestinationPrefix("/user"); // Для персональных топиков
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-            .setAllowedOriginPatterns(
-                "http://localhost:*",
-                "http://127.0.0.1:*",
-                "http://[::1]:*"
-            )
-            .withSockJS()
-            .setWebSocketEnabled(true) // Разрешаем WebSocket транспорт
-            .setHeartbeatTime(25000); // Таймаут для heartbeat
+                .setAllowedOriginPatterns(
+                        "http://localhost:*",
+                        "http://127.0.0.1:*",
+                        "http://[::1]:*"
+                );
+//            .withSockJS()
+//            .setWebSocketEnabled(true) // Разрешаем WebSocket транспорт
+//            .setHeartbeatTime(25000); // Таймаут для heartbeat
+
     }
 }
