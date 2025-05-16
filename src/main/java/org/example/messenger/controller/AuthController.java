@@ -36,25 +36,26 @@ public class AuthController {
     public ResponseEntity<?> register(@Valid @RequestBody UserDto userDto) {
         User user = userService.registerUser(userDto.getUsername(), userDto.getPassword(), passwordEncoder);
         String token = jwtUtil.generateToken(user);
-        return ResponseEntity.ok(Map.of("token", token, "user", user));
+        return ResponseEntity.ok(Map.of("token", token, "userId", user.getId(), "username", user.getUsername()));
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserDto userDto) {
         try {
             authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                    userDto.getUsername(),
-                    userDto.getPassword()
-                )
+                    new UsernamePasswordAuthenticationToken(
+                            userDto.getUsername(),
+                            userDto.getPassword()
+                    )
             );
 
             User user = (User) userService.loadUserByUsername(userDto.getUsername());
             String token = jwtUtil.generateToken(user);
 
             return ResponseEntity.ok(Map.of(
-                "token", token,
-                "username", user.getUsername()
+                    "token", token,
+                    "username", user.getUsername(),
+                    "userId", user.getId()
             ));
 
         } catch (BadCredentialsException e) {

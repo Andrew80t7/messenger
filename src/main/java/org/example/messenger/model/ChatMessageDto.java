@@ -1,23 +1,21 @@
 package org.example.messenger.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.io.Serializable;
 
 @Getter
-public class ChatMessageDto {
-    // Геттеры и Сеттеры
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class ChatMessageDto implements Serializable {
+    @Setter
     private Long senderId;
     private Long chatId;
     private String text;
+    private String timestamp;
 
-    public void setSenderId(Long senderId) {
-        this.senderId = senderId;
-    }
-
-    public void setChatId(Long chatId) {
-        this.chatId = chatId;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
 }

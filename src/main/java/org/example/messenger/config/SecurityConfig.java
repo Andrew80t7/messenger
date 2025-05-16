@@ -33,8 +33,7 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
 
 
-    public SecurityConfig(UserDetailsService userDetailsService,
-                          JwtAuthEntryPoint authEntryPoint, UserDetailsService userDetailsService1) {
+    public SecurityConfig(JwtAuthEntryPoint authEntryPoint, UserDetailsService userDetailsService1) {
         this.authEntryPoint = authEntryPoint;
         this.userDetailsService = userDetailsService1;
     }
@@ -94,9 +93,8 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOriginPatterns(List.of(
-                "http://localhost:*",
-                "http://127.0.0.1:*",
-                "http://[::1]:*"
+                "http://localhost:3000",
+                "http://127.0.0.1:3000"
         ));
         config.setAllowedMethods(List.of("*"));
         config.setAllowedHeaders(List.of(
