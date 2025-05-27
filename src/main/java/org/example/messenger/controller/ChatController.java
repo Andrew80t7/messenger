@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -36,23 +37,30 @@ public class ChatController {
 
     //Создание чата
     @PostMapping("/create")
-    public ResponseEntity<Chat> createChat(@RequestBody ChatCreateRequest request) {
-        Chat createdChat = chatService.createChatWithParticipants(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdChat);
+    public ResponseEntity<Chat> createChat(
+            @RequestBody ChatCreateRequest request,
+            Principal principal   // java.security.Principal
+    ) {
+        String username = principal.getName();  // всегда ненулевой
+        User currentUser = userService.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден: " + username));
+        Chat created = chatService.createChatWithParticipants(request, currentUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PostMapping("/chats/{chatId}/add-user/{user-Id}")
     public ResponseEntity<?> addUserToChat(
             @PathVariable Long chatId,
-            @PathVariable Long userId, @PathVariable("user-Id") String parameter)
-    {
+            @PathVariable Long userId, @PathVariable("user-Id") String parameter) {
         Chat chat = chatService.findByIdWithParticipants(chatId).
                 orElseThrow(() -> new IllegalArgumentException("Chat not found"));
         User user = userService.findById(userId).
                 orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        chat.getParticipants().add(user);
-        chatRepository.save(chat);
+        if (chat.getParticipants().stream().noneMatch(u -> u.getId().equals(userId))) {
+            chat.getParticipants().add(user);
+            chatRepository.save(chat);
+        }
         return ResponseEntity.ok().build();
     }
 

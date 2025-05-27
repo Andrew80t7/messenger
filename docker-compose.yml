@@ -1,41 +1,46 @@
-version: '3.8'
-
 services:
-  backend:
-    build: .
-    container_name: messenger-backend
-    ports:
-      - "8080:8080"
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/messenger_db
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=Andrew80t7!
-    depends_on:
-      - db
-
-#  frontend:
-#    build:
-#      context: ./frontend
-#    container_name: messenger-frontend
-#    ports:
-#      - "3000:80"
-#    environment:
-#      - CHOKIDAR_USEPOLLING=true
-#    depends_on:
-#      - backend
-
-
   db:
     image: postgres:14
     container_name: messenger-db
+    restart: unless-stopped
     environment:
-      - POSTGRES_DB=messenger_db
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=Andrew80t7!
-    ports:
-      - "5432:5432"
+      POSTGRES_DB: messenger_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Andrew80t7!
     volumes:
       - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: messenger-backend
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/messenger_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Andrew80t7!
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: messenger-frontend
+    restart: unless-stopped
+
+    environment:
+      REACT_APP_API_BASE_URL: http://backend:8080
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
 
 volumes:
   pgdata:

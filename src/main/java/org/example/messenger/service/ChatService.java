@@ -21,7 +21,6 @@ public class ChatService {
 
     // Создание нового чата
     public Chat createChat(Chat chat) {
-        // Дополнительная логика создания чата (если требуется)
         return chatRepository.save(chat);
     }
 
@@ -40,13 +39,20 @@ public class ChatService {
         return chatRepository.findByIdWithParticipants(chatId);
     }
 
-    public Chat createChatWithParticipants(ChatCreateRequest request) {
+    public Chat createChatWithParticipants(ChatCreateRequest request, User currentUser) {
         Chat chat = new Chat();
 
         List<User> participants = userService.findAllById(request.getParticipantIds());
 
         if (participants.isEmpty()) {
             throw new IllegalArgumentException("Не указаны участники чата");
+        }
+
+        boolean alreadyIncluded = participants.stream().
+                anyMatch(u -> u.getId().equals(currentUser.getId()));
+
+        if (!alreadyIncluded){
+            participants.add(currentUser);
         }
 
         chat.setParticipants(participants);

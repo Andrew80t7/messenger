@@ -1,12 +1,11 @@
 package org.example.messenger.config;
-
-import jakarta.servlet.Filter;
 import org.example.messenger.service.UserService;
 import org.example.messenger.util.JwtAuthEntryPoint;
 import org.example.messenger.util.JwtAuthenticationFilter;
 import org.example.messenger.util.JwtUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -51,13 +50,13 @@ public class SecurityConfig {
                                 "/register",
                                 "/login",
                                 "/websocket/**",
-                                "/users",
-                                "/chats/user/**",
                                 "/chats/create",
                                 "/messages/send",
-                                "/chat/**",
-                                "/messages/chat/**"
-                        ).permitAll()
+                                "/chat/**"
+                        ).permitAll().requestMatchers(HttpMethod.GET,
+                                "/users",
+                                "/chats/user/**",
+                                "/messages/chat/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

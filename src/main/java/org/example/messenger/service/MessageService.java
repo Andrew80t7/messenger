@@ -11,7 +11,6 @@ import org.example.messenger.repository.ChatRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class MessageService {
@@ -25,16 +24,12 @@ public class MessageService {
 
     @Transactional
     public Message sendMessage(Optional<User> senderOptional, Optional<Chat> chat, String text) {
-        // Извлекаем пользователя или выбрасываем исключение, если отсутствует
         User sender = senderOptional.orElseThrow(() ->
                 new IllegalArgumentException("Отправитель не найден"));
 
-        // Повторно загружаем Chat с участниками
         Chat persistentChat = chatRepository.findByIdWithParticipants(chat.get().getId()).
                 orElseThrow(() -> new IllegalArgumentException("Чат не найден"));
 
-
-        // Теперь можно обращаться к persistentChat.getParticipants() без LazyInitializationException.
         if (!persistentChat.getParticipants().contains(sender)) {
             throw new IllegalArgumentException("Пользователь не является участником чата");
         }
@@ -46,8 +41,6 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
-
-    // Получение сообщений чата
     public List<Message> getChatMessages(Chat chat) {
         return messageRepository.findByChat(chat);
     }
